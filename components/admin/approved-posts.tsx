@@ -19,12 +19,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAdminPosts } from "@/hooks/use-admin";
 import { AlertCircle, Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export default function AdminApprovedPosts() {
+  const { posts, isLoading, error, fetchPosts, updatePremiumStatus } =
+    useAdminPosts();
   const approvedPosts = posts.filter(
-    (post) => post.status === "approved" && !post.isPremium
+    (post) => post.status === "APPROVED" && !post.isPremium
   );
   const hasFetchedRef = useRef(false);
 
@@ -34,110 +37,123 @@ export default function AdminApprovedPosts() {
   useEffect(() => {
     // Only fetch once on component mount
     if (!hasFetchedRef.current) {
-      dispatch(fetchAdminPosts());
+      fetchPosts();
       hasFetchedRef.current = true;
     }
-  }, [dispatch]);
+  }, [fetchPosts]);
 
-  const openPremiumDialog = (postId: string) => {
+  const handlePromoteToPremium = (postId: string) => {
     setSelectedPostId(postId);
     setPremiumDialogOpen(true);
   };
 
-  const handleMarkPremium = () => {
+  const handleConfirmPromote = async () => {
     if (selectedPostId) {
-      dispatch(
-        updatePostStatus({
-          postId: selectedPostId,
-          isPremium: true,
-        })
-      );
-      setPremiumDialogOpen(false);
+      try {
+        const success = await updatePremiumStatus(selectedPostId, true);
+        if (success) {
+          setPremiumDialogOpen(false);
+        }
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
-  if (status === "loading" && approvedPosts.length === 0) {
+  if (isLoading && approvedPosts.length === 0) {
     return <AdminPostsSkeleton />;
   }
 
-  if (status === "failed") {
+  if (error) {
     return (
-      <Alert variant="destructive">
+      <Alert variant="destructive" className="mb-4">
         <AlertCircle className="h-4 w-4" />
-        <AlertDescription>
-          {error || "Failed to load posts. Please try again."}
-        </AlertDescription>
+        <AlertDescription>{error}</AlertDescription>
       </Alert>
     );
   }
 
   if (approvedPosts.length === 0) {
     return (
-      <div className="text-center py-12">
-        <h3 className="text-lg font-medium">No approved posts</h3>
-        <p className="text-muted-foreground">Approved posts will appear here</p>
-      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <p className="text-center text-muted-foreground">
+            No approved posts found.
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {approvedPosts.map((post) => (
-        <Card key={post.id}>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>{post.title}</CardTitle>
-              <Badge variant="outline" className="bg-green-100">
-                Approved
-              </Badge>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              By {post.author.name} •{" "}
-              {new Date(post.createdAt).toLocaleDateString()}
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                {post.image && (
-                  <img
-                    src={post.image || "/placeholder.svg"}
-                    alt={post.title}
-                    className="mb-4 h-48 w-full rounded-md object-cover"
-                  />
-                )}
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline">{post.priceRange}</Badge>
-                  <Badge variant="outline" className="capitalize">
-                    {post.category}
+    <>
+      <div className="grid gap-4 md:grid-cols-2">
+        {approvedPosts.map((post) => (
+          <Card key={post.id}>
+            <CardHeader>
+              <div className="flex items-start justify-between">
+                <div>
+                  <CardTitle className="line-clamp-1">{post.title}</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    {post.author.name}
+                  </p>
+                </div>
+                <Badge
+                  variant="outline"
+                  className="border-green-500 text-green-500"
+                >
+                  Approved
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="relative aspect-video overflow-hidden rounded-md">
+                <img
+                  src={post.image || "/placeholder.svg"}
+                  alt={post.title}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+              <div className="mt-4">
+                <p className="line-clamp-2 text-sm">{post.description}</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <Badge variant="outline">{post.category}</Badge>
+                  <Badge variant="outline">
+                    ${post.minPrice} - ${post.maxPrice}
                   </Badge>
                   <Badge variant="outline">{post.location}</Badge>
                 </div>
               </div>
-              <div>
-                <p className="text-muted-foreground">{post.description}</p>
+            </CardContent>
+            <CardFooter>
+              <div className="grid w-full gap-2">
+                <Button asChild variant="outline">
+                  <a
+                    href={`/posts/${post.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View Post
+                  </a>
+                </Button>
+                <Button onClick={() => handlePromoteToPremium(post.id)}>
+                  <Star className="mr-2 h-4 w-4" />
+                  Promote to Premium
+                </Button>
               </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            <Button
-              variant="outline"
-              onClick={() => openPremiumDialog(post.id)}
-            >
-              <Star className="mr-2 h-4 w-4 text-yellow-500" />
-              Mark as Premium
-            </Button>
-          </CardFooter>
-        </Card>
-      ))}
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
 
       <Dialog open={premiumDialogOpen} onOpenChange={setPremiumDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Mark as Premium</DialogTitle>
+            <DialogTitle>Promote to Premium</DialogTitle>
             <DialogDescription>
-              This will make the post only visible to premium users. Are you
-              sure you want to continue?
+              Are you sure you want to promote this post to premium status?
+              Premium posts will be featured in the premium section and shown
+              first in search results.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -147,50 +163,51 @@ export default function AdminApprovedPosts() {
             >
               Cancel
             </Button>
-            <Button onClick={handleMarkPremium}>Mark as Premium</Button>
+            <Button onClick={handleConfirmPromote}>
+              <Star className="mr-2 h-4 w-4" />
+              Promote to Premium
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }
 
 function AdminPostsSkeleton() {
   return (
-    <div className="space-y-6">
-      {Array(3)
-        .fill(0)
-        .map((_, i) => (
-          <Card key={i}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <Skeleton className="h-6 w-1/3" />
-                <Skeleton className="h-5 w-20" />
+    <div className="grid gap-4 md:grid-cols-2">
+      {[1, 2, 3, 4].map((i) => (
+        <Card key={i}>
+          <CardHeader>
+            <div className="flex items-start justify-between">
+              <div>
+                <Skeleton className="h-6 w-40" />
+                <Skeleton className="mt-1 h-4 w-28" />
               </div>
-              <Skeleton className="h-4 w-1/4" />
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <Skeleton className="mb-4 h-48 w-full rounded-md" />
-                  <div className="flex gap-2">
-                    <Skeleton className="h-5 w-16" />
-                    <Skeleton className="h-5 w-16" />
-                    <Skeleton className="h-5 w-16" />
-                  </div>
-                </div>
-                <div>
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-2/3" />
-                </div>
+              <Skeleton className="h-6 w-24" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="aspect-video w-full rounded-md" />
+            <div className="mt-4">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="mt-1 h-4 w-full" />
+              <div className="mt-2 flex flex-wrap gap-2">
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-6 w-28" />
               </div>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Skeleton className="h-9 w-36" />
-            </CardFooter>
-          </Card>
-        ))}
+            </div>
+          </CardContent>
+          <CardFooter>
+            <div className="grid w-full gap-2">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </CardFooter>
+        </Card>
+      ))}
     </div>
   );
 }

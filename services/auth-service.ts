@@ -1,12 +1,12 @@
-import { fetchApi } from "@/lib/api-client"
+import { fetchApi } from "@/lib/api-client";
 import type {
   ApiResponse,
-  RegisterRequest,
+  ChangePasswordRequest,
   LoginRequest,
   LoginResponse,
-  ChangePasswordRequest,
   RefreshTokenResponse,
-} from "@/types/api"
+  RegisterRequest,
+} from "@/types/api";
 
 export const authService = {
   // Register a new user
@@ -14,7 +14,7 @@ export const authService = {
     return fetchApi<ApiResponse<{ user: any }>>("/auth/register", {
       method: "POST",
       body: JSON.stringify(data),
-    })
+    });
   },
 
   // Login user
@@ -22,21 +22,23 @@ export const authService = {
     return fetchApi<ApiResponse<LoginResponse>>("/auth/login", {
       method: "POST",
       body: JSON.stringify(data),
-    })
+    });
   },
 
   // Change password
-  async changePassword(data: ChangePasswordRequest): Promise<ApiResponse<null>> {
+  async changePassword(
+    data: ChangePasswordRequest
+  ): Promise<ApiResponse<null>> {
     return fetchApi<ApiResponse<null>>("/auth/change-password", {
       method: "POST",
       body: JSON.stringify(data),
-    })
+    });
   },
 
   // Refresh token
   async refreshToken(): Promise<ApiResponse<RefreshTokenResponse>> {
     return fetchApi<ApiResponse<RefreshTokenResponse>>("/auth/refresh-token", {
       method: "POST",
-    })
+    });
   },
-}
+};
