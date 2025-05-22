@@ -1,30 +1,9 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
-import { getToken } from "next-auth/jwt"
+import { authConfig } from "@/auth.config";
+import NextAuth from "next-auth";
 
-export async function middleware(request: NextRequest) {
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET || "your-default-secret-do-not-use-in-production",
-  })
-
-  // Admin routes protection
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    if (!token || token.role !== "admin") {
-      return NextResponse.redirect(new URL("/auth/login", request.url))
-    }
-  }
-
-  // Premium routes protection
-  if (request.nextUrl.pathname.startsWith("/premium-spots")) {
-    if (!token || (token.role !== "premium" && token.role !== "admin")) {
-      return NextResponse.redirect(new URL("/premium", request.url))
-    }
-  }
-
-  return NextResponse.next()
-}
+export default NextAuth(authConfig).auth;
 
 export const config = {
-  matcher: ["/admin/:path*", "/premium-spots/:path*"],
-}
+  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};
