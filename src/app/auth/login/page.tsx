@@ -5,8 +5,8 @@ import EZButton from "@/components/shared/FormBuilder/EZButton";
 import { EZForm } from "@/components/shared/FormBuilder/EZForm";
 import EZInput from "@/components/shared/FormBuilder/EZInput";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { authenticate } from "./action";
 
 export default function LoginPage() {
   const defaultValues: TLoginFormValues = {
@@ -15,11 +15,12 @@ export default function LoginPage() {
   };
 
   async function onSubmit(data: TLoginFormValues) {
-    await signIn("credentials", {
-      redirect: false,
-      email: data.email,
-      password: data.password,
-    });
+    try {
+      console.log("Login data", data);
+      await authenticate(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
   return (
@@ -36,14 +37,19 @@ export default function LoginPage() {
         defaultValues={defaultValues}
         resolver={zodResolver(loginSchema)}
       >
-        <EZInput type="email" name="email" label="Email" />
+        <EZInput
+          type="email"
+          name="email"
+          label="Email"
+          placeholder="john@gmail.com"
+        />
         <EZInput
           type="password"
           name="password"
           label="Password"
           placeholder="••••••••"
         />
-        <EZButton>Login</EZButton>
+        <EZButton className="w-full">Login</EZButton>
       </EZForm>
 
       <div className="text-center text-sm">

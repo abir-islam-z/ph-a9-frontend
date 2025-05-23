@@ -1,4 +1,6 @@
-import { getSession } from "next-auth/react";
+"use server";
+
+import { auth } from "@/auth";
 
 // API base URL from environment variable
 const API_BASE_URL =
@@ -14,7 +16,12 @@ export async function fetchApi<T>(
   }`;
 
   // Get session for authentication token
-  const session = await getSession();
+  const session = await auth();
+  const token = session?.accessToken;
+
+  console.log("APi CLient", {
+    session,
+  });
 
   // Default headers
   const headers: Record<string, string> = {
@@ -69,10 +76,8 @@ export async function fetchFormData<T>(
   formData: FormData,
   method: "POST" | "PUT" | "PATCH" = "POST"
 ): Promise<T> {
-  const session = await getSession();
-
   const headers: HeadersInit = {};
-
+  const session = await auth();
   // Add auth token if available
   if (session?.accessToken) {
     headers["Authorization"] = `Bearer ${session.accessToken}`;
