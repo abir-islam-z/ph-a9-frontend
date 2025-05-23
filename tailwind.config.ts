@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { colors } from "./src/styles/colors";
 
 const config: Config = {
   darkMode: ["class"],
@@ -24,10 +25,12 @@ const config: Config = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          ...colors.primary,
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          ...colors.secondary,
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -36,6 +39,7 @@ const config: Config = {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          ...colors.accent,
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -44,6 +48,9 @@ const config: Config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        neutral: {
+          ...colors.neutral,
+        },
         chart: {
           "1": "hsl(var(--chart-1))",
           "2": "hsl(var(--chart-2))",

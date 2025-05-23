@@ -102,9 +102,9 @@ export default function FoodPostsGrid() {
   }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {data.data.map((post) => (
-        <FoodPostCard key={post.id} post={post} />
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {data.data.map((post, index) => (
+        <FoodPostCard key={post.id} post={post} index={index} />
       ))}
     </div>
   );

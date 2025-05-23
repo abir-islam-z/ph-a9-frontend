@@ -1,6 +1,6 @@
 import { AuthProvider } from "@/components/auth-provider";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
+import Footer from "@/components/shared/footer";
+import Header from "@/components/shared/navbar/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { FilterProvider } from "@/contexts/filter-context";
@@ -31,7 +31,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             <FilterProvider>
-              <div className="flex min-h-screen flex-col">
+              <div className="flex min-h-screen flex-col bg-fixed bg-noise data-lines">
                 <Header />
                 <main className="flex-1">{children}</main>
                 <Footer />
