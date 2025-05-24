@@ -2,10 +2,11 @@ import FilterBar from "@/components/filter-bar";
 import FoodPostsGrid from "@/components/food-posts-grid";
 import FoodPostsLoading from "@/components/food-posts-loading";
 import HeroSlider from "@/components/hero-slider";
+import ExploreByCategory from "@/components/home/explore-by-category";
 import PremiumSpots from "@/components/premium-spots";
 import { Button } from "@/components/ui/button";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/motion";
-import { ArrowRight, ChefHat, Filter, MapPin, TrendingUp } from "lucide-react";
+import { ArrowRight, Filter, MapPin, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -15,72 +16,7 @@ export default function HomePage() {
       {/* Hero Slider Section */}
       <HeroSlider />
 
-      {/* Category Cards */}
-      <FadeIn from="bottom" delay={0.2} className="mb-16 mt-16">
-        <h2 className="mb-6 text-2xl font-bold">Explore by Category</h2>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <Link
-            href="/posts?category=SNACKS"
-            className="group overflow-hidden rounded-lg"
-          >
-            <div className="relative overflow-hidden rounded-xl bg-primary-100 p-6 transition-all duration-300 group-hover:bg-primary-200 group-hover:shadow-md">
-              <span className="inline-block rounded-full bg-primary-500 p-2 text-white">
-                <ChefHat className="h-6 w-6" />
-              </span>
-              <h3 className="mt-4 text-lg font-semibold">Snacks</h3>
-              <p className="text-sm text-muted-foreground">
-                Quick bites and small treats
-              </p>
-              <ArrowRight className="absolute bottom-4 right-4 h-5 w-5 transform text-primary-500 transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
-          <Link
-            href="/posts?category=MEALS"
-            className="group overflow-hidden rounded-lg"
-          >
-            <div className="relative overflow-hidden rounded-xl bg-secondary-100 p-6 transition-all duration-300 group-hover:bg-secondary-200 group-hover:shadow-md">
-              <span className="inline-block rounded-full bg-secondary-500 p-2 text-white">
-                <ChefHat className="h-6 w-6" />
-              </span>
-              <h3 className="mt-4 text-lg font-semibold">Meals</h3>
-              <p className="text-sm text-muted-foreground">
-                Hearty and filling street dishes
-              </p>
-              <ArrowRight className="absolute bottom-4 right-4 h-5 w-5 transform text-secondary-500 transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
-          <Link
-            href="/posts?category=SWEETS"
-            className="group overflow-hidden rounded-lg"
-          >
-            <div className="relative overflow-hidden rounded-xl bg-rose-100 p-6 transition-all duration-300 group-hover:bg-rose-200 group-hover:shadow-md">
-              <span className="inline-block rounded-full bg-rose-500 p-2 text-white">
-                <ChefHat className="h-6 w-6" />
-              </span>
-              <h3 className="mt-4 text-lg font-semibold">Sweets</h3>
-              <p className="text-sm text-muted-foreground">
-                Desserts and sweet treats
-              </p>
-              <ArrowRight className="absolute bottom-4 right-4 h-5 w-5 transform text-rose-500 transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
-          <Link
-            href="/posts?category=DRINKS"
-            className="group overflow-hidden rounded-lg"
-          >
-            <div className="relative overflow-hidden rounded-xl bg-accent-100 p-6 transition-all duration-300 group-hover:bg-accent-200 group-hover:shadow-md">
-              <span className="inline-block rounded-full bg-accent-500 p-2 text-white">
-                <ChefHat className="h-6 w-6" />
-              </span>
-              <h3 className="mt-4 text-lg font-semibold">Drinks</h3>
-              <p className="text-sm text-muted-foreground">
-                Refreshing beverages
-              </p>
-              <ArrowRight className="absolute bottom-4 right-4 h-5 w-5 transform text-accent-500 transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
-        </div>
-      </FadeIn>
+      <ExploreByCategory />
 
       {/* Features Section */}
       <FadeIn from="bottom" delay={0.3} className="mb-16">

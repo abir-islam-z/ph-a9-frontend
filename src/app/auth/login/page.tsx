@@ -71,7 +71,7 @@ export default function LoginPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <FadeIn from="bottom" delay={0.2} className="max-w-md mx-auto">
-        <Card className="border-2 border-muted bg-card/50 backdrop-blur-sm shadow-lg">
+        <Card className="border-2 cyber-border border-muted bg-card/50 backdrop-blur-sm shadow-lg">
           <CardHeader className="space-y-1 text-center">
             <div className="flex justify-center mb-2">
               <div className="rounded-full bg-primary p-2 text-primary-foreground">

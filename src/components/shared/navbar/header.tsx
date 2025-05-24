@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ROLES } from "@/lib/const";
 import { cn } from "@/lib/utils";
 import {
   Globe,
@@ -66,8 +67,8 @@ export default function Header({ session }: { session: Session | null }) {
     }
   });
 
-  const isAdmin = session?.user?.role === "admin";
-  const isPremium = session?.user?.role === "premium";
+  const isAdmin = session?.user?.role === ROLES.ADMIN;
+  const isPremium = session?.user?.role === ROLES.PREMIUM;
 
   const navigation = [
     { name: "Home", href: "/", icon: Home },

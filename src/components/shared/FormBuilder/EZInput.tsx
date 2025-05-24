@@ -42,7 +42,7 @@ const EZInput = ({
               type={type}
               {...field}
               value={handleNegativeValueForNumber(field.value)}
-              className={`mt-2`}
+              className={`mt-2 cyber-border`}
               disabled={disabled}
               onWheel={(e) => {
                 if (type === "number") {
