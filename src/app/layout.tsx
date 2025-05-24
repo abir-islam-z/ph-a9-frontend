@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { AuthProvider } from "@/components/auth-provider";
 import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/navbar/header";
@@ -15,11 +16,12 @@ export const metadata = {
   description: "Discover and review the best street food in your area",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
@@ -32,7 +34,7 @@ export default function RootLayout({
           <AuthProvider>
             <FilterProvider>
               <div className="flex min-h-screen flex-col bg-fixed bg-noise data-lines">
-                <Header />
+                <Header session={session} />
                 <main className="flex-1">{children}</main>
                 <Footer />
               </div>

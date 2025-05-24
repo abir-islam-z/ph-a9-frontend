@@ -1,5 +1,6 @@
 "use client";
 
+import { doLogout } from "@/app/auth/login/action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,8 @@ import {
   User,
 } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
-import { signOut, useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -37,8 +39,7 @@ import { NavbarSearch } from "./navbar-search";
 
 export const MotionLink = motion.create(Link);
 
-export default function Header() {
-  const { data: session } = useSession();
+export default function Header({ session }: { session: Session | null }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -513,9 +514,9 @@ export default function Header() {
                     >
                       <button
                         className="flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
-                        onClick={() => {
+                        onClick={async () => {
                           setIsOpen(false);
-                          signOut({ callbackUrl: "/" });
+                          await doLogout();
                         }}
                       >
                         <LogOut className="h-4 w-4" />

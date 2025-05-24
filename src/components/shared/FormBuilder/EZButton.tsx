@@ -16,9 +16,7 @@ export default function EZButton({
   return (
     <Button
       className={cn("mt-3 cursor-pointer", className)}
-      disabled={
-        !formState.isValid || formState.isSubmitting || !formState.isDirty
-      }
+      disabled={formState.isSubmitting || !formState.isDirty}
     >
       {formState.isSubmitting ? (
         <Loader2Icon className="animate-spin" />

@@ -14,9 +14,17 @@ type TInputProps = {
   label?: string;
   disabled?: boolean;
   placeholder?: string;
+  className?: string;
 };
 
-const EZInput = ({ type, name, label, disabled, placeholder }: TInputProps) => {
+const EZInput = ({
+  type,
+  name,
+  label,
+  disabled,
+  placeholder,
+  className,
+}: TInputProps) => {
   const handleNegativeValueForNumber = (value: number | string) => {
     if (type === "number") {
       return Number(value) < 0 ? 0 : value;
@@ -27,7 +35,7 @@ const EZInput = ({ type, name, label, disabled, placeholder }: TInputProps) => {
     <FormField
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={className}>
           <FormLabel className="capitalize">{label || name}</FormLabel>
           <FormControl>
             <Input

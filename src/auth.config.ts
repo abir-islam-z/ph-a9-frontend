@@ -1,5 +1,4 @@
 import type { NextAuthConfig } from "next-auth";
-
 export const authConfig = {
   pages: {
     signIn: "/login",
@@ -9,20 +8,18 @@ export const authConfig = {
     maxAge: 24 * 60 * 60, // 1 days
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn =
-        !!auth?.user?.accessToken && auth?.user?.role === "admin";
-      return isLoggedIn;
+    authorized: async ({ auth, request }) => {
+      if (auth?.user.accessToken) {
+        return true;
+      }
+      return false;
     },
-
-    async jwt({ token, user }) {
-      console.log("JWT callback", { token, user });
-      return { ...token, ...user };
-    },
-    async session({ session, token }) {
-      console.log("Session callback", { session, token });
+    session: async ({ session, token, user }) => {
       session.user = token as any;
       return session;
+    },
+    jwt: async ({ token, user }) => {
+      return { ...token, ...user };
     },
   },
   providers: [], // Add providers with an empty array for now

@@ -4,7 +4,8 @@ import { auth } from "@/auth";
 
 // API base URL from environment variable
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://street-food-phi.vercel.app/api/v1";
 
 // Generic fetch function with authentication and error handling
 export async function fetchApi<T>(
@@ -17,7 +18,6 @@ export async function fetchApi<T>(
 
   // Get session for authentication token
   const session = await auth();
-  const token = session?.accessToken;
 
   console.log("APi CLient", {
     session,
@@ -30,8 +30,8 @@ export async function fetchApi<T>(
   };
 
   // Add auth token if available
-  if (session?.accessToken) {
-    headers["Authorization"] = `Bearer ${session.accessToken}`;
+  if (session?.user?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.user?.accessToken}`;
   }
 
   // Merge options
@@ -79,8 +79,8 @@ export async function fetchFormData<T>(
   const headers: HeadersInit = {};
   const session = await auth();
   // Add auth token if available
-  if (session?.accessToken) {
-    headers["Authorization"] = `Bearer ${session.accessToken}`;
+  if (session?.user?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.user?.accessToken}`;
   }
 
   const options: RequestInit = {

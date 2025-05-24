@@ -1,24 +1,41 @@
-import NextAuth from "next-auth";
+import { HttpStatusCode } from "axios";
+import { jwtDecode } from "jwt-decode";
+import NextAuth, { User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { loginWithCredentials } from "./app/auth/login/action";
 import { loginSchema } from "./app/auth/login/login.schema";
 import { authConfig } from "./auth.config";
+import AppException from "./lib/exception";
+import { getErrorMessage } from "./lib/getErrorMessage";
+import { JwtDecoded } from "./types/jwtDecode.type";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
-      async authorize(credentials): Promise<any> {
+      async authorize(credentials): Promise<User | null> {
         try {
           const { email, password } = loginSchema.parse(credentials);
-          const user = await loginWithCredentials({ email, password });
+          const response = await loginWithCredentials({ email, password });
+          const jwtDecoded: JwtDecoded = jwtDecode(response.data?.accessToken);
 
-          if (user && user.data?.accessToken) return user.data;
+          const user: User = {
+            id: jwtDecoded.userId,
+            name: jwtDecoded.name,
+            email: jwtDecoded.email,
+            role: jwtDecoded.role,
+            accessToken: response.data?.accessToken,
+            refreshToken: response.data?.refreshToken,
+          };
+
+          if (user && user.accessToken) return user;
 
           return null;
         } catch (error) {
-          console.error("Error during authorization:", error);
-          throw new Error("Invalid credentials");
+          throw new AppException(
+            getErrorMessage(error),
+            HttpStatusCode.BadRequest
+          );
         }
       },
     }),
