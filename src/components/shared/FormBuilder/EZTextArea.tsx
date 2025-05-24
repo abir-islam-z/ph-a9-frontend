@@ -13,6 +13,7 @@ type TTextAreaProps = {
   label?: string;
   disabled?: boolean;
   placeholder?: string;
+  className?: string;
 };
 
 const EZTextArea = ({
@@ -21,12 +22,13 @@ const EZTextArea = ({
   row = 10,
   disabled,
   placeholder,
+  className = "",
 }: TTextAreaProps) => {
   return (
     <FormField
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={`space-y-2 ${className}`}>
           <FormLabel>
             {label || name.charAt(0).toUpperCase() + name.slice(1)}
           </FormLabel>
