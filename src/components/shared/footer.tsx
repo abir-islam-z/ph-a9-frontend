@@ -89,10 +89,10 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/premium"
+                  href="/pricing"
                   className="text-muted-foreground transition-colors hover:text-primary"
                 >
-                  Premium
+                  Pricing Plans
                 </Link>
               </li>
               <li>
@@ -195,10 +195,10 @@ export default function Footer() {
               <div className="flex items-center">
                 <Mail className="mr-2 h-4 w-4 shrink-0" />
                 <a
-                  href="mailto:info@streetfoodie.com"
+                  href="mailto:info@NeoFoodie.com"
                   className="hover:text-primary"
                 >
-                  info@streetfoodie.com
+                  info@NeoFoodie.com
                 </a>
               </div>
               <div className="flex items-center">

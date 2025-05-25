@@ -1,6 +1,6 @@
 "use client";
 
-import { doLogout } from "@/app/auth/login/action";
+import { doLogout } from "@/app/(mainLayout)/auth/_actions/login.action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -74,6 +74,7 @@ export default function Header({ session }: { session: Session | null }) {
     { name: "Home", href: "/", icon: Home },
     { name: "Food Spots", href: "/posts", icon: Globe },
     { name: "Search", href: "/search", icon: Search },
+    { name: "Pricing", href: "/pricing", icon: Star },
     { name: "Blog", href: "/blog", icon: MessageSquare },
     { name: "About", href: "/about", icon: Info },
   ];
@@ -273,7 +274,7 @@ export default function Header({ session }: { session: Session | null }) {
                   {!isPremium && (
                     <DropdownMenuItem asChild>
                       <Link
-                        href="/premium"
+                        href="/pricing"
                         className="flex cursor-pointer items-center"
                       >
                         <Star className="mr-2 h-4 w-4 text-yellow-500" />
@@ -372,6 +373,31 @@ export default function Header({ session }: { session: Session | null }) {
                     >
                       <Star className="h-4 w-4 text-yellow-500" />
                       Premium Spots
+                    </Link>
+                  </motion.div>
+                )}
+
+                {!isPremium && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      delay: navigation.length * 0.05,
+                      duration: 0.3,
+                    }}
+                  >
+                    <Link
+                      href="/pricing"
+                      className={cn(
+                        "flex items-center gap-3 rounded-md px-2 py-1.5 text-sm font-medium transition-colors hover:bg-accent/50",
+                        pathname === "/pricing"
+                          ? "bg-accent/50 text-accent-foreground"
+                          : "text-foreground/60"
+                      )}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Star className="h-4 w-4 text-yellow-500" />
+                      Pricing Plans
                     </Link>
                   </motion.div>
                 )}
