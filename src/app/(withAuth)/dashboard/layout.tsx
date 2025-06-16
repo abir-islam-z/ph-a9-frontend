@@ -8,140 +8,51 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
   SidebarInset,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
 import * as React from "react";
 
-import { AppSidebar } from "@/components/app-sidebar";
+import { auth } from "@/auth";
+import { NavMain } from "@/components/app-sidebar/nav-main";
+import { NavUser } from "@/components/app-sidebar/nav-user";
+import Logo from "@/components/shared/logo";
+import { Button } from "@/components/ui/button";
 
 const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
+    role: "",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: "GalleryVerticalEnd",
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: "AudioWaveform",
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: "Command",
-      plan: "Free",
-    },
-  ],
+
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: "SquareTerminal",
+      title: "Dashboard",
+      url: "//#endregion",
+      icon: "dashboard",
       isActive: true,
       items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: "Bot",
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: "BookOpen",
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
+        { title: "Admin", url: "/dashboard/admin" },
+        { title: "User", url: "/dashboard/user" },
       ],
     },
     {
       title: "Settings",
       url: "#",
-      icon: "Settings2",
+      icon: "settings",
       items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
+        { title: "Profile", url: "/settings/profile" },
+        { title: "Account", url: "/settings/account" },
       ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: "Frame",
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: "PieChart",
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: "Map",
     },
   ],
 };
@@ -151,9 +62,35 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+
+  console.log("Session:", session?.user);
+  data.user = {
+    name: session?.user?.name || "Guest",
+    email: session?.user?.email || "<Email>",
+    avatar: session?.user?.image || "/avatars/default.jpg",
+    role: session?.user?.role || "guest",
+  };
   return (
     <SidebarProvider>
-      <AppSidebar navItems={data} />
+      <Sidebar collapsible="icon">
+        <SidebarHeader>
+          <Button
+            size="lg"
+            variant="ghost"
+            className="w-full justify-start pl-2"
+          >
+            <Logo />
+          </Button>
+        </SidebarHeader>
+        <SidebarContent>
+          <NavMain items={data.navMain} />
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={data.user} />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">

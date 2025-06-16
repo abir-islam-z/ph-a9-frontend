@@ -17,6 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { usePathname } from "next/navigation";
 import GetIcon from "../shared/get-icon";
 
 export function NavMain({
@@ -26,13 +27,13 @@ export function NavMain({
     title: string;
     url: string;
     icon?: string;
-    isActive?: boolean;
     items?: {
       title: string;
       url: string;
     }[];
   }[];
 }) {
+  const currentPath = usePathname();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -41,7 +42,7 @@ export function NavMain({
           <Collapsible
             key={item?.title}
             asChild
-            defaultOpen={item?.isActive}
+            defaultOpen={currentPath === item?.url}
             className="group/collapsible"
           >
             <SidebarMenuItem>
