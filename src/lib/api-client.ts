@@ -19,10 +19,6 @@ export async function fetchApi<T>(
   // Get session for authentication token
   const session = await auth();
 
-  console.log("APi CLient", {
-    session,
-  });
-
   // Default headers
   const headers: Record<string, string> = {
     "Content-Type": "application/json",

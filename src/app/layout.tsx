@@ -1,10 +1,8 @@
 import { auth } from "@/auth";
-import { AuthProvider } from "@/components/auth-provider";
-import Footer from "@/components/shared/footer";
-import Header from "@/components/shared/navbar/header";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { FilterProvider } from "@/contexts/filter-context";
+import { AuthProvider } from "@/providers/auth-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import { Inter } from "next/font/google";
 import type React from "react";
 import "./globals.css";
@@ -27,17 +25,13 @@ export default async function RootLayout({
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
           <AuthProvider>
             <FilterProvider>
-              <div className="flex min-h-screen flex-col bg-fixed bg-noise data-lines">
-                <Header session={session} />
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
+              <>{children}</>
               <Toaster />
             </FilterProvider>
           </AuthProvider>

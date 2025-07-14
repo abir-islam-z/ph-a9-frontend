@@ -27,7 +27,7 @@ export default function AccountSettings({ session }: { session: Session }) {
             {session?.user?.role !== ROLES.PREMIUM &&
               session?.user?.role !== ROLES.ADMIN && (
                 <p className="mt-1 text-sm text-muted-foreground">
-                  <a href="/premium" className="text-primary hover:underline">
+                  <a href="/pricing" className="text-primary hover:underline">
                     Upgrade to Premium
                   </a>{" "}
                   to access exclusive content.
