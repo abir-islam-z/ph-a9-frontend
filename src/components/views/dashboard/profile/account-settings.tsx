@@ -63,7 +63,7 @@ export default function AccountSettings({ session }: { session: Session }) {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => redirect("/auth/change-password")}
+              onClick={() => redirect("/dashboard/change-password")}
             >
               Change
             </Button>

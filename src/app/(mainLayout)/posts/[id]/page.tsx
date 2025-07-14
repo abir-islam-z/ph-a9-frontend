@@ -3,15 +3,19 @@ import CommentSection from "@/components/views/posts/comment-section";
 import PostDetail from "@/components/views/posts/post-detail";
 import { Suspense } from "react";
 
-export default function PostDetailPage({ params }: { params: { id: string } }) {
+export default async function PostDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   return (
     <div className="container mx-auto px-4 py-8">
       <Suspense fallback={<PostDetailSkeleton />}>
-        <PostDetail id={params.id} />
+        <PostDetail id={await params.id} />
       </Suspense>
 
       <Suspense fallback={<CommentSectionSkeleton />}>
-        <CommentSection postId={params.id} />
+        <CommentSection postId={await params.id} />
       </Suspense>
     </div>
   );

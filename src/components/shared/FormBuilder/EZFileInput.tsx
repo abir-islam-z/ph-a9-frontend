@@ -1,3 +1,4 @@
+import { FileUploader } from "@/components/ui/file-uploader";
 import {
   FormControl,
   FormField,
@@ -6,7 +7,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { FileUploader } from "../ui/file-uploader";
 
 type TInputProps = {
   name: string;

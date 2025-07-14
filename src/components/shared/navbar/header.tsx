@@ -1,6 +1,6 @@
 "use client";
 
-import { doLogout } from "@/app/(mainLayout)/auth/_actions/login.action";
+import { doLogout } from "@/app/actions/login.action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -183,7 +183,7 @@ export default function Header({ session }: { session: Session | null }) {
 
           {session ? (
             <>
-              <Link href="/posts/new" className="hidden md:block">
+              <Link href="/dashboard/posts/new" className="hidden md:block">
                 <Button className="gap-1" size="sm" variant="secondary">
                   <Plus className="h-4 w-4" />
                   New Post

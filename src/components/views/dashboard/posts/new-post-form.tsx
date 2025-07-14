@@ -2,56 +2,19 @@
 
 import type React from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import EZButton from "@/components/shared/FormBuilder/EZButton";
+import EZFileInput from "@/components/shared/FormBuilder/EZFileInput";
+import { EZForm } from "@/components/shared/FormBuilder/EZForm";
+import EZInput from "@/components/shared/FormBuilder/EZInput";
+import EZSelect from "@/components/shared/FormBuilder/EZSelect";
+import EZTextArea from "@/components/shared/FormBuilder/EZTextArea";
 import { useToast } from "@/hooks/use-toast";
 import { fetchFormData } from "@/lib/api-client";
+import { postSchema, TCreatePost } from "@/schemas/post.schema";
 import { FoodSpot, PaginatedResponse } from "@/types/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const postSchema = z.object({
-  title: z
-    .string()
-    .min(5, { message: "Title must be at least 5 characters" })
-    .max(100),
-  description: z
-    .string()
-    .min(20, { message: "Description must be at least 20 characters" }),
-  location: z.string().min(3, { message: "Location is required" }),
-  minPrice: z.coerce
-    .number()
-    .min(0, { message: "Minimum price must be at least 0" }),
-  maxPrice: z.coerce
-    .number()
-    .min(0, { message: "Maximum price must be at least 0" }),
-  category: z.enum(["SNACKS", "MEALS", "SWEETS", "DRINKS"], {
-    required_error: "Please select a category",
-  }),
-  image: z.instanceof(File).optional(),
-});
-
-type PostFormValues = z.infer<typeof postSchema>;
 
 export default function NewPostForm() {
   const router = useRouter();
@@ -59,19 +22,16 @@ export default function NewPostForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const form = useForm<PostFormValues>({
-    resolver: zodResolver(postSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      location: "",
-      minPrice: 0,
-      maxPrice: 0,
-      category: "MEALS",
-    },
-  });
+  const defaultValues = {
+    title: "",
+    description: "",
+    location: "",
+    minPrice: 0,
+    maxPrice: 0,
+    category: "MEALS",
+  };
 
-  async function onSubmit(data: PostFormValues) {
+  async function onSubmit(data: TCreatePost) {
     setIsSubmitting(true);
 
     try {
@@ -120,7 +80,7 @@ export default function NewPostForm() {
     const file = e.target.files?.[0];
 
     if (file) {
-      form.setValue("image", file);
+      // form.setValue("image", file);
 
       // Create image preview
       const reader = new FileReader();
@@ -132,152 +92,56 @@ export default function NewPostForm() {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Delicious Street Tacos" {...field} />
-              </FormControl>
-              <FormDescription>
-                Give your food spot a catchy title
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+    <EZForm
+      onSubmit={onSubmit}
+      defaultValues={defaultValues}
+      resolver={zodResolver(postSchema)}
+    >
+      <EZInput
+        name="title"
+        label="Title"
+        placeholder="Delicious Street Tacos"
+      />
+
+      <EZTextArea name="description" label="Description" />
+
+      <EZInput
+        name="location"
+        label="Location"
+        placeholder="123 Main St, City"
+      />
+
+      <EZInput
+        type="number"
+        name="minPrice"
+        label="Minimum Price"
+        placeholder="0.00"
+        className="mt-4"
+      />
+      <EZInput
+        type="number"
+        name="maxPrice"
+        label="Maximum Price"
+        placeholder="100.00"
+        className="mt-4"
+      />
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <EZSelect
+          name="category"
+          label="Category"
+          options={[
+            { value: "SNACKS", label: "Snacks" },
+            { value: "MEALS", label: "Meals" },
+            { value: "SWEETS", label: "Sweets" },
+            { value: "DRINKS", label: "Drinks" },
+          ]}
         />
+      </div>
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Describe the food, taste, atmosphere, etc."
-                  className="min-h-[120px]"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                Provide details about what makes this food spot special
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <EZFileInput name="image" label="Image" />
 
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <Input placeholder="123 Main St, City" {...field} />
-              </FormControl>
-              <FormDescription>
-                Where can people find this food spot?
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="minPrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Min Price ($)</FormLabel>
-                  <FormControl>
-                    <Input type="number" min="0" step="0.01" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="maxPrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Max Price ($)</FormLabel>
-                  <FormControl>
-                    <Input type="number" min="0" step="0.01" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="SNACKS">Snacks</SelectItem>
-                    <SelectItem value="MEALS">Meals</SelectItem>
-                    <SelectItem value="SWEETS">Sweets</SelectItem>
-                    <SelectItem value="DRINKS">Drinks</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormItem>
-          <FormLabel>Image</FormLabel>
-          <FormControl>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="cursor-pointer"
-            />
-          </FormControl>
-          <FormDescription>
-            Upload an image of the food (max 5MB)
-          </FormDescription>
-          <FormMessage />
-
-          {imagePreview && (
-            <div className="mt-2">
-              <img
-                src={imagePreview || "/placeholder.svg"}
-                alt="Preview"
-                className="h-40 w-auto rounded-md object-cover"
-              />
-            </div>
-          )}
-        </FormItem>
-
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Submit Food Spot"}
-        </Button>
-      </form>
-    </Form>
+      <EZButton>Submit Food Spot</EZButton>
+    </EZForm>
   );
 }

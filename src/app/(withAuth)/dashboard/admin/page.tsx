@@ -1,11 +1,11 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AdminApprovedPosts from "./_components/approved-posts";
-import AdminComments from "./_components/comments";
-import AdminPendingPosts from "./_components/pending-posts";
-import AdminPremiumPosts from "./_components/premium-posts";
-import AdminRejectedPosts from "./_components/rejected-posts";
+import AdminApprovedPosts from "@/components/views/dashboard/admin/approved-posts";
+import AdminComments from "@/components/views/dashboard/admin/comments";
+import AdminPendingPosts from "@/components/views/dashboard/admin/pending-posts";
+import AdminPremiumPosts from "@/components/views/dashboard/admin/premium-posts";
+import AdminRejectedPosts from "@/components/views/dashboard/admin/rejected-posts";
 
 export default function AdminDashboardPage() {
   return (

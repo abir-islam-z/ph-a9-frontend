@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import AccountSettings from "./_components/account-settings";
-import PersonalInformation from "./_components/personal-information";
+import AccountSettings from "../../../../components/views/dashboard/profile/account-settings";
+import PersonalInformation from "../../../../components/views/dashboard/profile/personal-information";
 
 // Fetcher function for SWR
 

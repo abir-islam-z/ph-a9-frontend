@@ -2,11 +2,11 @@ import { HttpStatusCode } from "axios";
 import { jwtDecode } from "jwt-decode";
 import NextAuth, { User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { loginWithCredentials } from "./app/(mainLayout)/auth/_actions/login.action";
-import { loginSchema } from "./app/(mainLayout)/auth/_schema/login.schema";
+import { loginWithCredentials } from "./app/actions/login.action";
 import { authConfig } from "./auth.config";
 import AppException from "./lib/exception";
 import { getErrorMessage } from "./lib/getErrorMessage";
+import { loginSchema } from "./schemas/login.schema";
 import { JwtDecoded } from "./types/jwtDecode.type";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({

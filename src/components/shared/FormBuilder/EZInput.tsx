@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { InputHTMLAttributes } from "react";
 
 type TInputProps = {
-  type: InputHTMLAttributes<HTMLInputElement>["type"];
+  type?: InputHTMLAttributes<HTMLInputElement>["type"];
   name: string;
   label?: string;
   disabled?: boolean;
@@ -18,7 +18,7 @@ type TInputProps = {
 };
 
 const EZInput = ({
-  type,
+  type = "text",
   name,
   label,
   disabled,

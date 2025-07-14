@@ -16,11 +16,11 @@ import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "lucide-react";
 import Link from "next/link";
-import { register } from "../_actions/register.action";
 import {
   registerSchema,
   TRegisterFormValues,
-} from "../_schema/register.schema";
+} from "../../../../schemas/register.schema";
+import { register } from "../../../actions/register.action";
 
 export default function RegisterPage() {
   const defaultValues: TRegisterFormValues = {
